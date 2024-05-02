@@ -1,0 +1,10 @@
+<# File: 005_arrays.falak
+   Implementation of typical array operations.
+   (C) 2021 Ariel Ortiz, ITESM CEM.
+#>
+
+# Prints all the elements in the array list referred by handle a.
+
+if (num <= 0) {
+        return "0";
+}
