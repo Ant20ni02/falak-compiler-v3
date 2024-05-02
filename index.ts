@@ -1,8 +1,13 @@
+/**
+ * Analizador Léxico y Sintáctico del lenguaje Falak
+ * Marco Antonio Gardida Cortés A01423221
+ * Miguel Jiménez Padilla A01423189
+ */
+
 const readline = require('node:readline');
 import { readFileSync } from 'fs';
 import type { Token } from './types';
-import { token_types } from './helpers';
-
+import { token_types, action, goto, rules } from './helpers';
 
 function lexer(input: string): Token[] {
     const tokens: Token[] = [];
@@ -41,11 +46,59 @@ function lexer(input: string): Token[] {
     return tokens;
 }
 
+function parseSLR(tokens: Token[]): void {
+    let stack: number[] = [0];
+    tokens.push({
+        type: '$',
+        value: 'end of input',
+        ln: tokens[tokens.length - 1].ln,
+    });
+
+    let tokenIndex = 0;
+    while (tokenIndex < tokens.length) {
+        const currentToken = tokens[tokenIndex];
+        const currentState = stack[stack.length - 1];
+        const actionEntry = action[currentState]?.[currentToken.type];
+
+        if (!actionEntry) {
+            throw new Error(
+                `Syntax error: unexpected token ${currentToken.type} on line ${currentToken.ln}`
+            );
+        }
+
+        const [actionType, stateOrRuleNumber] = actionEntry;
+
+        switch (actionType) {
+            case 'S':
+                if (typeof stateOrRuleNumber === 'number') {
+                    stack.push(stateOrRuleNumber);
+                    tokenIndex++;
+                }
+                break;
+            case 'R':
+                if (typeof stateOrRuleNumber === 'number') {
+                    const rule = rules[stateOrRuleNumber - 1];
+                    stack.splice(-rule.len);
+                    const gotoState = goto[stack[stack.length - 1]][rule.lhs];
+                    stack.push(gotoState);
+                }
+                break;
+            case 'A':
+                console.log('Parsing completed successfully.');
+                return;
+            default:
+                throw new Error(
+                    `Invalid action: ${actionType} on line ${currentToken.ln}`
+                );
+        }
+    }
+}
+
 function processFile(filePath: string) {
     const trimmedFilePath = filePath.replace(/^['"]|['"]$/g, '');
     const text = readFileSync(trimmedFilePath, 'utf-8');
     const tokens = lexer(text);
-    console.log(tokens);
+    return tokens;
 }
 
 const index = () => {
@@ -54,14 +107,18 @@ const index = () => {
         output: process.stdout,
     });
 
-    rl.question(`Please drag and drop the file into this window and press Enter: `, (filePath: string) => {
-        processFile(filePath);
-        rl.close();
-    });
+    rl.question(
+        `Please drag and drop the file into this window and press Enter: `,
+        (filePath: string) => {
+            const tokens = processFile(filePath);
+            parseSLR(tokens);
+            rl.close();
+        }
+    );
 
     rl.on('close', () => {
         process.exit(0);
     });
-}
+};
 
 index();
