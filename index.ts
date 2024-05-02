@@ -7,7 +7,9 @@
 const readline = require('node:readline');
 import { readFileSync } from 'fs';
 import type { Token } from './types';
-import { token_types, action, goto, rules } from './helpers';
+import { token_types, rules } from './helpers';
+import { action } from './action_table';
+import { goto } from './goto_table';
 
 function lexer(input: string): Token[] {
     const tokens: Token[] = [];
