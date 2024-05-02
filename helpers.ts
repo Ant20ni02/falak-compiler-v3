@@ -38,7 +38,7 @@ export const token_types : TokenType[] = [
     { type: '>', regex: /^>/ },
     { type: '%', regex: /^%/ },
     { type: '^', regex: /^\^/ },
-    { type: ';', regex: /^;+/ },
+    { type: ';', regex: /^;/ },
     { type: ',', regex: /^,/ },
     { type: 'ID', regex: /^[a-zA-Z][a-zA-Z0-9_]*/ },
 ];

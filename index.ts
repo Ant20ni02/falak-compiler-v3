@@ -11,19 +11,23 @@ function lexer(input: string): Token[] {
     while (input.length > 0) {
         let matchFound = false;
 
-        const leadingSpaces = input.match(/^\s+/);
-        if (leadingSpaces) {
-            input = input.slice(leadingSpaces[0].length);
-            line += (leadingSpaces[0].match(/\n/g) || []).length;
+        let leadingWhitespaceMatch = input.match(/^\s+/);
+        if (leadingWhitespaceMatch) {
+            line += (leadingWhitespaceMatch[0].match(/\n/g) || []).length;
+            input = input.substring(leadingWhitespaceMatch[0].length);
         }
 
-        for (const type of token_types) {
-            const match = input.match(type.regex);
+        for (const { type, regex } of token_types) {
+            const match = input.match(regex);
             if (match) {
-                if (!['CMT_SL', 'CMT_ML'].includes(type.type)) { // Ignoring comments
-                tokens.push({ type: type.type, value: match[0], ln: line });
+                if (!['CMT_SL', 'CMT_ML'].includes(type)) {
+                    tokens.push({ type, value: match[0], ln: line });
                 }
-                input = input.slice(match[0].length);
+                input = input.substring(match[0].length);
+                const newLinesInMatch = match[0].match(/\n/g);
+                if (newLinesInMatch) {
+                    line += newLinesInMatch.length;
+                }
                 matchFound = true;
                 break;
             }
