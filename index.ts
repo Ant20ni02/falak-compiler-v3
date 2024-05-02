@@ -1,14 +1,19 @@
+/*
+    Actividad 3.3. Analizador sintáctico
+    Marco Antonio Gardida Cortés A01423221
+    Miguel Jiménez Padilla A01423189
+*/
+
 const readline = require('readline');
-import { readFileSync } from 'fs';
+;import { readFileSync } from 'fs';
+import { token_types } from './helpers';
+import { Lexer } from './Lexer';
 
-const splitFileContent = (filePath: string) => {
+function readFile(filePath : string) {
     const trimmedFilePath = filePath.replace(/^['"]|['"]$/g, '');
-    const fullContent = readFileSync(trimmedFilePath, 'utf-8');
-
-    fullContent.split(/\r?\n/).forEach(line => {
-        console.log(line);
-    });
-};
+    const text = readFileSync(trimmedFilePath, 'utf-8');
+    return text;
+}
 
 const index = () => {
     const rl = readline.createInterface({
@@ -17,7 +22,9 @@ const index = () => {
     });
 
     rl.question(`Please drag and drop the file into this window and press Enter: `, (filePath: string) => {
-        splitFileContent(filePath);
+        const lexer = new Lexer(readFile(filePath), token_types);
+        console.log(lexer.createTokens())
+
         rl.close();
     });
 
