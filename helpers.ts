@@ -1,4 +1,4 @@
-import type { TokenType, GotoTable, Rule } from './types';
+import type { TokenType } from './types';
 
 export const token_types: TokenType[] = [
     { type: 'CMT_SL', regex: /^#.*/ },
@@ -45,8 +45,6 @@ export const token_types: TokenType[] = [
     { type: ',', regex: /^,/ },
     { type: 'ID', regex: /^[a-zA-Z][a-zA-Z0-9_]*/ },
 ];
-
-export const rules: Rule[] = [{ lhs: 'S', len: 3 }];
 
 /*const tokens = [
     "var", "ID", ",", "(", ")", "{", "}", "=", "inc", "dec", "if", "elseif", "else", 
