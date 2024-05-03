@@ -1,7 +1,7 @@
 import type { GotoTable } from './types';
 
 export const goto: GotoTable = {
-    '0': { "PROGRAM'": 1, 'DEF-LIST': 2 },
+    '0': { PROGRAM: 1, 'DEF-LIST': 2 },
     '1': {},
     '2': { DEF: 3, 'VAR-DEF': 4, 'FUN-DEF': 5 },
     '3': {},
