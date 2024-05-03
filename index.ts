@@ -53,46 +53,58 @@ function parseSLR(tokens: Token[]): void {
     let stack: number[] = [0];
     tokens.push({
         type: '$',
-        value: 'end of input',
-        ln: tokens[tokens.length - 1].ln,
+        value: 'xd',
+        ln: tokens[tokens.length - 1].ln + 1,
     });
 
     let tokenIndex = 0;
     while (tokenIndex < tokens.length) {
         const currentToken = tokens[tokenIndex];
         const currentState = stack[stack.length - 1];
-        const actionEntry = action[currentState]?.[currentToken.type];
+        const actions = action[currentState] || {};
+        const actionEntry = actions[currentToken.type];
 
-        if (!actionEntry) {
-            throw new Error(
-                `Syntax error: unexpected token ${currentToken.type} on line ${currentToken.ln}`
-            );
-        }
+        console.log(
+            `Current State: ${currentState}, Current Token: ${currentToken.type}`
+        );
 
-        const [actionType, stateOrRuleNumber] = actionEntry;
-
-        switch (actionType) {
-            case 'S':
-                if (typeof stateOrRuleNumber === 'number') {
-                    stack.push(stateOrRuleNumber);
+        if (actionEntry) {
+            const [actionType, nextStateOrRuleNumber] = actionEntry;
+            switch (actionType) {
+                case 'S': // Shift
+                    console.log(`Action: Shift to ${nextStateOrRuleNumber}`);
+                    stack.push(nextStateOrRuleNumber);
                     tokenIndex++;
-                }
-                break;
-            case 'R':
-                if (typeof stateOrRuleNumber === 'number') {
-                    const rule = rules[stateOrRuleNumber - 1];
+                    break;
+                case 'R': // Reduce
+                    const rule = rules[nextStateOrRuleNumber - 1];
+                    console.log(
+                        `Action: Reduce using rule ${nextStateOrRuleNumber} (${
+                            rule.lhs
+                        } -> ${Array(rule.len).fill('symbol').join(' ')})`
+                    );
                     stack.splice(-rule.len);
-                    const gotoState = goto[stack[stack.length - 1]][rule.lhs];
+                    const topState = stack[stack.length - 1];
+                    const gotoState = goto[topState][rule.lhs];
+                    if (gotoState === undefined) {
+                        throw new Error(
+                            `Goto state undefined for state ${topState} and non-terminal ${rule.lhs}`
+                        );
+                    }
                     stack.push(gotoState);
-                }
-                break;
-            case 'A':
-                console.log('Parsing completed successfully.');
-                return;
-            default:
-                throw new Error(
-                    `Invalid action: ${actionType} on line ${currentToken.ln}`
-                );
+                    break;
+                case 'A':
+                    console.log('Parsing completed successfully.');
+                    return;
+                default:
+                    throw new Error(
+                        `Invalid action: ${actionType} on line ${currentToken.ln}`
+                    );
+            }
+        } else {
+            throw new Error(
+                `Syntax error: unexpected token '${currentToken.type}' on line ${currentToken.ln}`
+            );
         }
     }
 }
@@ -114,6 +126,8 @@ const index = () => {
         `Please drag and drop the file into this window and press Enter: `,
         (filePath: string) => {
             const tokens = processFile(filePath);
+            console.log('Tokens obtained from lexer:\n', tokens, '\n');
+            console.log('Starting SLR parsing...');
             parseSLR(tokens);
             rl.close();
         }
