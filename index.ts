@@ -71,19 +71,19 @@ function parseSLR(tokens: Token[]): void {
         if (actionEntry) {
             const [actionType, nextStateOrRuleNumber] = actionEntry;
             switch (actionType) {
-                case 'S': // Shift
-                    console.log(`Action: Shift to ${nextStateOrRuleNumber}`);
+                case 'S':
+                    console.log(`Action: Shift to ${nextStateOrRuleNumber}\n`);
                     stack.push(nextStateOrRuleNumber);
                     tokenIndex++;
                     break;
-                case 'R': // Reduce
-                    const rule = rules[nextStateOrRuleNumber - 1];
+                case 'R':
+                    const rule = rules[nextStateOrRuleNumber];
                     console.log(
                         `Action: Reduce using rule ${nextStateOrRuleNumber} (${
                             rule.lhs
-                        } -> ${Array(rule.len).fill('symbol').join(' ')})`
+                        } -> ${Array(rule.len).fill('symbol').join(' ')})\n`
                     );
-                    stack.splice(-rule.len);
+                    rule.len !== 0 && stack.splice(-rule.len);
                     const topState = stack[stack.length - 1];
                     const gotoState = goto[topState][rule.lhs];
                     if (gotoState === undefined) {
@@ -127,7 +127,7 @@ const index = () => {
         (filePath: string) => {
             const tokens = processFile(filePath);
             console.log('Tokens obtained from lexer:\n', tokens, '\n');
-            console.log('Starting SLR parsing...');
+            console.log('Starting SLR parsing...\n');
             parseSLR(tokens);
             rl.close();
         }
