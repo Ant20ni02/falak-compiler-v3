@@ -34,4 +34,10 @@ export interface GotoTable {
 export interface Rule {
     lhs: string;
     len: number;
+    result: string[];
+}
+
+export interface TreeNode {
+    [key: string]: any;
+    children?: TreeNode[];
 }

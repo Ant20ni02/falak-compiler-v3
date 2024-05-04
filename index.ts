@@ -6,7 +6,7 @@
 
 const readline = require('node:readline');
 import { readFileSync } from 'fs';
-import type { Token } from './types';
+import type { Token, TreeNode } from './types';
 import { token_types } from './helpers';
 import { action } from './action_table';
 import { goto } from './goto_table';
