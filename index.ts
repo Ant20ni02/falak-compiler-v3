@@ -6,6 +6,7 @@
 
 const readline = require('node:readline');
 import { readFileSync } from 'fs';
+var treeify = require('treeify');
 import type { Token, TreeNode } from './types';
 import { token_types } from './helpers';
 import { action } from './action_table';
@@ -51,6 +52,7 @@ function lexer(input: string): Token[] {
 
 function parseSLR(tokens: Token[]): void {
     let stack: number[] = [0];
+    const treeStack: TreeNode[] = [];
     tokens.push({
         type: '$',
         value: 'xd',
@@ -86,6 +88,36 @@ function parseSLR(tokens: Token[]): void {
                     rule.len !== 0 && stack.splice(-rule.len);
                     const topState = stack[stack.length - 1];
                     const gotoState = goto[topState][rule.lhs];
+
+                    const newNode: TreeNode = {
+                        label: rule.lhs,
+                        children: [],
+                    };
+
+                    rule.result.forEach((element) =>
+                        newNode.children.push({ label: element, children: [] })
+                    );
+
+                    let found = false;
+
+                    for (var x = 0; x < treeStack.length; x++) {
+                        for (var y = 0; y < newNode.children.length; y++) {
+                            if (
+                                !found &&
+                                treeStack[x].label === newNode.children[y].label
+                            ) {
+                                newNode.children[y] = treeStack[x];
+                                treeStack.splice(x, 1);
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) {
+                            break;
+                        }
+                    }
+
+                    treeStack.push(newNode);
                     if (gotoState === undefined) {
                         throw new Error(
                             `Goto state undefined for state ${topState} and non-terminal ${rule.lhs}`
@@ -95,6 +127,7 @@ function parseSLR(tokens: Token[]): void {
                     break;
                 case 'A':
                     console.log('Parsing completed successfully.');
+                    console.log(treeify.asTree(treeStack[0], true));
                     return;
                 default:
                     throw new Error(

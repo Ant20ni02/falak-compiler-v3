@@ -38,6 +38,6 @@ export interface Rule {
 }
 
 export interface TreeNode {
-    [key: string]: any;
-    children?: TreeNode[];
+    label: string;
+    children: TreeNode[];
 }
