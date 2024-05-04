@@ -5,7 +5,7 @@ export const rules: Rule[] = [
     { lhs: 'PROGRAM', len: 1, result: ['DEF-LIST'] },
     { lhs: 'DEF-LIST', len: 2, result: ['DEF-LIST', 'DEF'] },
     { lhs: 'DEF-LIST', len: 0, result: [] },
-    { lhs: 'DEF', len: 1, result: ['DEF'] },
+    { lhs: 'DEF', len: 1, result: ['VAR-DEF'] },
     { lhs: 'DEF', len: 1, result: ['FUN-DEF'] },
     { lhs: 'VAR-DEF', len: 3, result: ['var', 'VAR-LIST', ';'] },
     { lhs: 'VAR-LIST', len: 1, result: ['ID-LIST'] },

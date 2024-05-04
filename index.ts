@@ -13,6 +13,17 @@ import { action } from './action_table';
 import { goto } from './goto_table';
 import { rules } from './rule';
 
+function checkForChildren(newNode: TreeNode, treeStack: TreeNode[]) {
+    for (let x = 0; x < newNode.children.length; x++) {
+        for (let y = treeStack.length - 1; y >= 0; y--) {
+            if (treeStack[y].label === newNode.children[x].label) {
+                newNode.children[x] = treeStack[y];
+                treeStack.splice(y, 1);
+            }
+        }
+    }
+}
+
 function lexer(input: string): Token[] {
     const tokens: Token[] = [];
     let line = 1;
@@ -81,9 +92,7 @@ function parseSLR(tokens: Token[]): void {
                 case 'R':
                     const rule = rules[nextStateOrRuleNumber];
                     console.log(
-                        `Action: Reduce using rule ${nextStateOrRuleNumber} (${
-                            rule.lhs
-                        } -> ${Array(rule.len).fill('symbol').join(' ')})\n`
+                        `Action: Reduce using rule ${nextStateOrRuleNumber} (${rule.lhs})\n`
                     );
                     rule.len !== 0 && stack.splice(-rule.len);
                     const topState = stack[stack.length - 1];
@@ -98,24 +107,7 @@ function parseSLR(tokens: Token[]): void {
                         newNode.children.push({ label: element, children: [] })
                     );
 
-                    let found = false;
-
-                    for (var x = 0; x < treeStack.length; x++) {
-                        for (var y = 0; y < newNode.children.length; y++) {
-                            if (
-                                !found &&
-                                treeStack[x].label === newNode.children[y].label
-                            ) {
-                                newNode.children[y] = treeStack[x];
-                                treeStack.splice(x, 1);
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (found) {
-                            break;
-                        }
-                    }
+                    checkForChildren(newNode, treeStack);
 
                     treeStack.push(newNode);
                     if (gotoState === undefined) {
