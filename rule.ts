@@ -97,7 +97,7 @@ export const rules: Rule[] = [
     { lhs: 'STMT-RETURN', len: 3, result: ['return', 'EXPR', ';'] },
     { lhs: 'STMT-EMPTY', len: 1, result: [';'] },
     { lhs: 'EXPR', len: 1, result: ['EXPR-OR'] },
-    { lhs: 'EXPR-OR', len: 3, result: ['EXPR-AND', 'OP-OR', 'EXPR-AND'] },
+    { lhs: 'EXPR-OR', len: 3, result: ['EXPR-OR', 'OP-OR', 'EXPR-AND'] },
     { lhs: 'OP-OR', len: 1, result: ['||'] },
     { lhs: 'OP-OR', len: 1, result: ['^'] },
     { lhs: 'EXPR-OR', len: 1, result: ['EXPR-AND'] },
