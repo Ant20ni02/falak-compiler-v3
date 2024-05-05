@@ -12,36 +12,39 @@
 
 ## Requisitos Previos
 
-Antes de ejecutar el analizador, asegúrate de tener instalado [Bun](https://bun.sh) en tu sistema. Bun es un runtime y package manager que se necesita para ejecutar el analizador.
+Para utilizar este analizador, debes tener instalado [Bun.js](https://bun.sh/docs/installation). Asegúrate de que Bun.js esté correctamente instalado en tu sistema antes de continuar.
 
-## Instalación
+## Instalación y/o actualización de dependencias
 
 Antes de ejecutar el analizador, puede que necesites instalar ciertas dependencias. Abre tu terminal y navega hasta el directorio donde se encuentra el proyecto. Una vez allí, ejecuta el siguiente comando:
 
 ```bash
 bun install
 ```
-
-## Uso
-
-1. Abre tu terminal y navega hasta el directorio del proyecto.
-2. Dentro del directorio del proyecto, ejecuta el siguiente comando:
+Posteriormente, escribe el siguiente comando para ejecutar el programa:
 
 ```bash
 bun run index.ts
 ```
 
-3. Arrastra el archivo .falak a la terminal.
+
+## Uso del analizador
+
+Una vez ejecutado el programa, aparecerá la siguiente leyenda en la terminal:
 
 ```bash
 Please drag and drop the file into this window and press Enter:
 ```
 
-4. Después de arrastrar el archivo, presiona Enter para comenzar el análisis.
+1. Arrastra o escribe la ruta del archivo .falak para ser leído
 
-## Resultados
+*Nota: se recomienda utilizar la terminal de VSCode para escribir o arrastrar el archivo y proceder con el programa. Esto se debe a que la librería utilizada para lectura de archivos, readFileSync, en ocasiones no funciona correctamente en terminales nativas de SO como Windows o Mac.*
 
-El analizador determinará si ha podido procesar correctamente el archivo .falak. De ser exitoso, desplegará en la terminal los pasos seguidos, finalizando con el mensaje:
+2. Después de arrastrar el archivo, presiona **ENTER** para comenzar el análisis.
+
+## Resultados y etructura de visualización
+
+El analizador determinará si ha podido procesar correctamente el archivo .falak. De ser exitoso, desplegará  una lista de tokens obtenida del analizador léxico, así como el parseo utilizando SLR y el árbol sintáctico resultante. El programa finalizará con el siguiente mensaje de éxito:
 
 ![Success Message](SuccessMessage.png)
 
