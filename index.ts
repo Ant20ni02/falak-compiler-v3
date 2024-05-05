@@ -1,5 +1,5 @@
 /**
- * Analizador Léxico y Sintáctico del lenguaje Falak
+ * Analizador léxico y sintáctico del lenguaje Falak
  * Marco Antonio Gardida Cortés A01423221
  * Miguel Jiménez Padilla A01423189
  * https://github.com/Ant20ni02/falak-compiler-v3

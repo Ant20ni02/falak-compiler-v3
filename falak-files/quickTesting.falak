@@ -5,4 +5,4 @@
 
 # Prints all the elements in the array list referred by handle a.
 
-var A
+var A = 10;
