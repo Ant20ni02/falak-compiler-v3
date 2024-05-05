@@ -82,7 +82,7 @@ function parseSLR(tokens: Token[]): void {
     const treeStack: TreeNode[] = [];
     tokens.push({
         type: '$',
-        value: 'xd',
+        value: '',
         ln: tokens[tokens.length - 1].ln + 1,
     });
 
@@ -145,8 +145,17 @@ function parseSLR(tokens: Token[]): void {
                     );
             }
         } else {
+            const expectedTokens = Object.keys(actions);
+            const expectedTokensString =
+                expectedTokens.length > 1
+                    ? `Expected "${expectedTokens.join('" or "')}"`
+                    : `Expected ${expectedTokens[0]}`;
+            const gottenTokens =
+                currentToken.type !== '$'
+                    ? ` but got "${currentToken.value}"`
+                    : '';
             throw new Error(
-                `Syntax error: unexpected token '${currentToken.type}' on line ${currentToken.ln}`
+                `Syntax error on line ${currentToken.ln}: ${expectedTokensString}${gottenTokens}.`
             );
         }
     }
