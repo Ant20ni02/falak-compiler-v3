@@ -2,16 +2,32 @@
  * Analizador Léxico y Sintáctico del lenguaje Falak
  * Marco Antonio Gardida Cortés A01423221
  * Miguel Jiménez Padilla A01423189
+ * https://github.com/Ant20ni02/falak-compiler-v3
  */
 
 const readline = require('node:readline');
-import { readFileSync } from 'fs';
+import { readFileSync, createWriteStream } from 'fs';
 var treeify = require('treeify');
 import type { Token, TreeNode } from './types';
 import { token_types } from './helpers';
 import { action } from './action_table';
 import { goto } from './goto_table';
 import { rules } from './rule';
+
+const outputFile = createWriteStream('output.txt', { flags: 'w' });
+
+function exportTree(...args: any) {
+    const message = args
+        .map((arg: any) => {
+            if (typeof arg === 'object') {
+                return JSON.stringify(arg, null, 2);
+            }
+            return arg;
+        })
+        .join(' ');
+
+    outputFile.write(`${new Date().toISOString()} \n\n ${message}\n`);
+}
 
 function checkForChildren(newNode: TreeNode, treeStack: TreeNode[]) {
     for (let x = 0; x < newNode.children.length; x++) {
@@ -118,8 +134,10 @@ function parseSLR(tokens: Token[]): void {
                     stack.push(gotoState);
                     break;
                 case 'A':
-                    console.log('Parsing completed successfully.');
-                    console.log(treeify.asTree(treeStack[0], true));
+                    console.log(
+                        '\nParsing completed successfully.\nOpen the output.txt file to view the generated tree.'
+                    );
+                    exportTree(treeify.asTree(treeStack[0], true));
                     return;
                 default:
                     throw new Error(
