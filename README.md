@@ -12,7 +12,7 @@
 
 ## Requisitos Previos
 
-Para utilizar este analizador, debes tener instalado [Bun.js](https://bun.sh/docs/installation). Asegúrate de que Bun.js esté correctamente instalado en tu sistema antes de continuar.
+Para utilizar este analizador, debes tener instalado [Bun](https://bun.sh/docs/installation). Asegúrate de que Bun,  que actúa tanto como *runtime* como *package manager*, esté correctamente instalado en tu sistema antes de continuar.
 
 ## Instalación y/o actualización de dependencias
 
