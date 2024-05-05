@@ -135,7 +135,11 @@ function parseSLR(tokens: Token[]): void {
                     break;
                 case 'A':
                     console.log(
-                        '\nParsing completed successfully.\nOpen the output.txt file to view the generated tree.'
+                        '\x1b[32m%s\x1b[0m',
+                        '\nParsing completed successfully.'
+                    );
+                    console.log(
+                        'Open the output.txt file to view the generated tree.'
                     );
                     exportTree(treeify.asTree(treeStack[0], true));
                     return;
@@ -154,9 +158,11 @@ function parseSLR(tokens: Token[]): void {
                 currentToken.type !== '$'
                     ? ` but got "${currentToken.value}"`
                     : '';
-            throw new Error(
-                `Syntax error on line ${currentToken.ln}: ${expectedTokensString}${gottenTokens}.`
+            console.log(
+                '\x1b[31m%s\x1b[0m',
+                `Syntax ERROR on line ${currentToken.ln}: ${expectedTokensString}${gottenTokens}.`
             );
+            break;
         }
     }
 }
